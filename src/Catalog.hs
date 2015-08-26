@@ -16,6 +16,7 @@ import qualified Network.HTTP.Client.MultipartFormData as Multi
 import System.Directory (createDirectoryIfMissing, doesFileExist)
 import System.FilePath ((</>), dropFileName)
 
+import qualified Elm.Compiler.Package as CN
 import qualified Elm.Docs as Docs
 import qualified Elm.Package.Description as Desc
 import qualified Elm.Package.Name as N
@@ -40,7 +41,7 @@ catalog path vars =
 
 versions :: N.Name -> Manager.Manager (Maybe [V.Version])
 versions name =
-  do  url <- catalog "versions" [("name", N.toString name)]
+  do  url <- catalog "versions" [("name", CN.toString name)]
       Http.send url $ \request manager -> do
           response <- Client.httpLbs request manager
           return $ Binary.decode $ Client.responseBody response
@@ -90,7 +91,7 @@ register name version =
           return ()
   where
     vars =
-        [ ("name", N.toString name)
+        [ ("name", CN.toString name)
         , ("version", V.toString version)
         ]
 
@@ -137,7 +138,7 @@ getJson metadata metadataPath name version =
         case exists of
           True -> liftIO (LBS.readFile fullMetadataPath)
           False ->
-            do  url <- catalog metadata [("name", N.toString name), ("version", V.toString version)]
+            do  url <- catalog metadata [("name", CN.toString name), ("version", V.toString version)]
                 Http.send url $ \request manager ->
                     do  response <- Client.httpLbs request manager
                         createDirectoryIfMissing True (dropFileName fullMetadataPath)
@@ -149,4 +150,4 @@ getJson metadata metadataPath name version =
         Left err ->
           throwError $
             "Unable to get " ++ metadataPath ++ " for "
-            ++ N.toString name ++ " " ++ V.toString version ++ "\n" ++ err
+            ++ CN.toString name ++ " " ++ V.toString version ++ "\n" ++ err

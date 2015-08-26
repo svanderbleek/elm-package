@@ -20,6 +20,7 @@ import System.FilePath ((</>), (<.>))
 import System.Directory (doesFileExist)
 
 import qualified Elm.Compiler.Module as Module
+import qualified Elm.Compiler.Package as CN
 import qualified Elm.Package.Name as N
 import qualified Elm.Package.Version as V
 import qualified Elm.Package.Constraint as C
@@ -44,7 +45,7 @@ data Description = Description
 defaultDescription :: Description
 defaultDescription =
     Description
-    { name = N.Name "USER" "PROJECT"
+    { name = CN.Name "USER" "PROJECT"
     , repo = "https://github.com/USER/PROJECT.git"
     , version = V.initialVersion
     , elmVersion = C.defaultElmVersion
@@ -144,7 +145,7 @@ prettyJSON description =
         dependencies description
           |> map fst
           |> List.sort
-          |> map (T.pack . N.toString)
+          |> map (T.pack . CN.toString)
 
 
 prettyAngles :: BS.ByteString -> BS.ByteString
@@ -176,7 +177,7 @@ instance ToJSON Description where
         ] ++ if natives d then ["native-modules" .= True] else []
     where
       jsonDeps deps =
-          Map.fromList $ map (first (T.pack . N.toString)) deps
+          Map.fromList $ map (first (T.pack . CN.toString)) deps
 
 
 instance FromJSON Description where
@@ -228,12 +229,12 @@ getDependencies :: Object -> Parser [(N.Name, C.Constraint)]
 getDependencies obj =
   do  deps <- get obj "dependencies" "a listing of your project's dependencies"
       forM (Map.toList deps) $ \(rawName, rawConstraint) ->
-          case (N.fromString rawName, C.fromString rawConstraint) of
+          case (CN.fromString rawName, C.fromString rawConstraint) of
             (Just name, Just constraint) ->
                 return (name, constraint)
 
             (Nothing, _) ->
-                fail (N.errorMsg rawName)
+                fail (CN.errorMsg rawName)
 
             (_, Nothing) ->
                 fail (C.errorMessage rawConstraint)
@@ -262,7 +263,7 @@ repoToName repo =
         else
             do  path <- getPath
                 let raw = take (length path - length end) path
-                case N.fromString raw of
+                case CN.fromString raw of
                   Nothing   -> Left msg
                   Just name -> Right name
     where

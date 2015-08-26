@@ -14,6 +14,8 @@ import qualified Elm.Package.Name as Name
 import qualified Elm.Package.Version as Version
 import qualified Utils.Http as Http
 
+import qualified Elm.Compiler.Package as CN
+
 
 -- TAGS from GITHUB
 
@@ -24,7 +26,7 @@ getVersionTags
     :: (MonadIO m, MonadError String m)
     => Name.Name -> m [Version.Version]
 
-getVersionTags (Name.Name user project) =
+getVersionTags (CN.Name user project) =
   do  response <-
           Http.send url $ \request manager ->
               httpLbs (request {requestHeaders = headers}) manager

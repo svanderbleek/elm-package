@@ -9,6 +9,7 @@ import qualified Network.HTTP.Client as Client
 import System.Directory (doesDirectoryExist, getDirectoryContents, renameDirectory)
 import System.FilePath ((</>))
 
+import qualified Elm.Compiler.Package as CN
 import qualified Elm.Package.Name as N
 import qualified Elm.Package.Version as V
 import qualified CommandLine.Helpers as Cmd
@@ -16,7 +17,7 @@ import qualified Utils.Http as Http
 
 
 package :: (MonadIO m, MonadError String m) => N.Name -> V.Version -> m ()
-package name@(N.Name user _) version =
+package name@(CN.Name user _) version =
   ifNotExists name version $ do
       Http.send zipball extract
       files <- liftIO $ getDirectoryContents "."

@@ -11,6 +11,7 @@ import qualified System.Directory as Dir
 import System.FilePath ((</>))
 
 import qualified Catalog
+import qualified Elm.Compiler.Package as CN
 import qualified Elm.Package.Constraint as C
 import qualified Elm.Package.Description as Desc
 import qualified Elm.Package.Name as N
@@ -116,4 +117,4 @@ getVersions name =
             throwError noLocalVersions
   where
     noLocalVersions =
-        "There are no versions of package '" ++ N.toString name ++ "' on your computer."
+        "There are no versions of package '" ++ CN.toString name ++ "' on your computer."

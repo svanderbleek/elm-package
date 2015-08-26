@@ -2,6 +2,7 @@ module Install.Plan where
 
 import qualified Data.Map as Map
 
+import qualified Elm.Compiler.Package as CN
 import qualified Elm.Package.Solution as S
 import qualified Elm.Package.Name as N
 import qualified Elm.Package.Version as V
@@ -54,10 +55,10 @@ display (Plan installs upgrades removals) =
           ++ "\n"
 
     displayInstall (name, version) =
-        N.toString name ++ " " ++ V.toString version
+        CN.toString name ++ " " ++ V.toString version
 
     displayUpgrade (name, (old, new)) =
-        N.toString name ++ " (" ++ V.toString old ++ " => " ++ V.toString new ++ ")"
+        CN.toString name ++ " (" ++ V.toString old ++ " => " ++ V.toString new ++ ")"
 
     displayRemove (name, _version) =
-        N.toString name
+        CN.toString name

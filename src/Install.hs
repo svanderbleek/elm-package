@@ -9,6 +9,7 @@ import System.Directory (doesFileExist, removeDirectoryRecursive)
 import System.FilePath ((</>))
 
 import qualified CommandLine.Helpers as Cmd
+import qualified Elm.Compiler.Package as CN
 import qualified Elm.Package.Constraint as Constraint
 import qualified Elm.Package.Description as Desc
 import qualified Elm.Package.Name as N
@@ -98,7 +99,7 @@ runPlan solution plan =
       -- fetch new dependencies
       Cmd.inDir Path.packagesDirectory $
           forM_ installs $ \(name, version) ->
-              do  liftIO (putStrLn ("Downloading " ++ N.toString name))
+              do  liftIO (putStrLn ("Downloading " ++ CN.toString name))
                   Fetch.package name version
 
       -- try to build new dependencies
@@ -124,7 +125,7 @@ latestVersion name =
         Nothing ->
             throwError $
             unlines
-            [ "No versions of package '" ++ N.toString name ++ "' were found!"
+            [ "No versions of package '" ++ CN.toString name ++ "' were found!"
             , "Is it spelled correctly?"
             ]
 
@@ -142,7 +143,7 @@ addConstraint autoYes name version description =
       | otherwise ->
           throwError $
             "This is a tricky update, you should modify " ++ Path.description ++ " yourself.\n"
-            ++ "Package " ++ N.toString name ++ " is already listed as a dependency:\n\n    "
+            ++ "Package " ++ CN.toString name ++ " is already listed as a dependency:\n\n    "
             ++ showDependency name constraint ++ "\n\n"
             ++ "You probably want one of the following constraints instead:\n\n    "
             ++ Constraint.toString (Constraint.expand constraint version) ++ "\n    "
@@ -182,7 +183,7 @@ addNewDependency autoYes name version description =
 
     confirmNewAddition =
       do  putStrLn $
-            "To install " ++ N.toString name ++ " I would like to add the following\n"
+            "To install " ++ CN.toString name ++ " I would like to add the following\n"
             ++ "dependency to " ++ Path.description ++ ":\n\n    "
             ++ showDependency name newConstraint
             ++ "\n"
@@ -193,12 +194,12 @@ addNewDependency autoYes name version description =
 
 showDependency :: N.Name -> Constraint.Constraint -> String
 showDependency name constraint =
-    show (N.toString name) ++ ": " ++ show (Constraint.toString constraint)
+    show (CN.toString name) ++ ": " ++ show (Constraint.toString constraint)
 
 
 initialDescription :: Manager.Manager Desc.Description
 initialDescription =
-  do  let core = N.Name "elm-lang" "core"
+  do  let core = CN.Name "elm-lang" "core"
       version <- latestVersion core
       let desc = Desc.defaultDescription {
           Desc.dependencies = [ (core, Constraint.untilNextMajor version) ]

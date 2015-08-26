@@ -14,6 +14,7 @@ import qualified Manager
 import qualified Publish
 import qualified Paths_elm_package as This
 import qualified Elm.Compiler as Compiler
+import qualified Elm.Compiler.Package as CN
 import qualified Elm.Package.Name as N
 import qualified Elm.Package.Paths as Path
 import qualified Elm.Package.Version as V
@@ -163,7 +164,7 @@ installInfo =
 
 package :: Opt.Parser N.Name
 package =
-    Opt.argument (argReader "PACKAGE" N.fromString) $
+    Opt.argument (argReader "PACKAGE" CN.fromString) $
         mconcat
         [ Opt.metavar "PACKAGE"
         , Opt.help "A specific package name (e.g. evancz/automaton)"

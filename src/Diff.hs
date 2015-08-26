@@ -7,6 +7,7 @@ import qualified CommandLine.Helpers as Cmd
 import qualified Diff.Compare as Compare
 import qualified Diff.Display as Display
 import qualified Docs
+import qualified Elm.Compiler.Package as CN
 import qualified Elm.Docs as Docs
 import qualified Elm.Package.Description as Desc
 import qualified Elm.Package.Name as N
@@ -61,7 +62,7 @@ computeDiff name oldVersion newDocs maybeNewVersion =
         Cmd.out (Display.packageChanges changes)
     where
         msg =
-            "Comparing " ++ N.toString name ++ " " ++ V.toString oldVersion ++ " to " ++ newStuff ++ "..."
+            "Comparing " ++ CN.toString name ++ " " ++ V.toString oldVersion ++ " to " ++ newStuff ++ "..."
 
         newStuff =
             case maybeNewVersion of

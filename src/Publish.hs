@@ -7,6 +7,7 @@ import qualified Bump
 import qualified Catalog
 import qualified CommandLine.Helpers as Cmd
 import qualified Docs
+import qualified Elm.Compiler.Package as CN
 import qualified Elm.Docs as Docs
 import qualified Elm.Package.Description as Desc
 import qualified Elm.Package.Name as N
@@ -23,7 +24,7 @@ publish =
       let name = Desc.name description
       let version = Desc.version description
 
-      Cmd.out $ unwords [ "Verifying", N.toString name, V.toString version, "..." ]
+      Cmd.out $ unwords [ "Verifying", CN.toString name, V.toString version, "..." ]
       verifyMetadata description
 
       docs <- Docs.generate

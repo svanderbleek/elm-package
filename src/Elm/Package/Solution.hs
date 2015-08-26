@@ -12,6 +12,7 @@ import qualified Data.HashMap.Strict as HashMap
 import qualified Data.Map as Map
 import qualified Data.Text as Text
 
+import qualified Elm.Compiler.Package as CN
 import qualified Elm.Package.Name as N
 import qualified Elm.Package.Version as V
 
@@ -45,7 +46,7 @@ toJson solution =
     object (map toField (Map.toList solution))
   where
     toField (name, version) =
-        Text.pack (N.toString name) .= Text.pack (V.toString version)
+        Text.pack (CN.toString name) .= Text.pack (V.toString version)
 
 
 fromJson :: (MonadError String m) => HashMap.HashMap String String -> m Solution
@@ -56,7 +57,7 @@ fromJson hashMap =
 
 parseNameAndVersion :: (MonadError String m) => (String,String) -> m (N.Name, V.Version)
 parseNameAndVersion (rawName, rawVersion) =
-    do  name <- parse rawName N.fromString ("package name " ++ rawName)
+    do  name <- parse rawName CN.fromString ("package name " ++ rawName)
         vrsn <- parse rawVersion V.fromString ("version number for package " ++ rawName)
         return (name, vrsn)
 
