@@ -1,0 +1,13 @@
+resolver: lts-3.22
+
+packages:
+- '.'
+- location:
+    git: git@github.com:svanderbleek/elm-compiler
+    commit: 128c6b5caad64158f62b83dcf77ee296dc668aad
+
+extra-deps: []
+
+flags: {}
+
+extra-package-dbs: []
